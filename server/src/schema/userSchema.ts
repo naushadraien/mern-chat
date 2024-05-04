@@ -7,8 +7,11 @@ const authSchema = {
     email: z.string({ message: "email is required" }).email({
       message: "The email address you entered is not valid.",
     }),
-    password: z.string({ message: "password is required" }).min(8, {
-      message: "Please enter a password that is at least 8 characters long.",
+    password: z.string({ message: "password is required" }).min(4, {
+      message: "Please enter a password that is at least 4 characters long.",
+    }),
+    confirmPassword: z.string({ message: "password is required" }).min(4, {
+      message: "Please enter a password that is at least 4 characters long.",
     }),
     gender: z.enum(["male", "female"], {
       message: "please choose gender within male and female",
