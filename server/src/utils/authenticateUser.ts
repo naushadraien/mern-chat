@@ -3,7 +3,7 @@ import chatConfig from "../config/index.js";
 import { TryCatch } from "../middlewares/error.js";
 import { CustomRequest, UserType } from "../types/types.js";
 import { errorMessage } from "./utility-func.js";
-import User from "../models/user.js";
+import User from "../models/User.js";
 
 export const authenticateUser = TryCatch(
   async (req: CustomRequest<UserType>, res, next) => {

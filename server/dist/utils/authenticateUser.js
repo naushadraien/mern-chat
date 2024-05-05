@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import chatConfig from "../config/index.js";
 import { TryCatch } from "../middlewares/error.js";
 import { errorMessage } from "./utility-func.js";
-import User from "../models/user.js";
+import User from "../models/User.js";
 export const authenticateUser = TryCatch(async (req, res, next) => {
     const token = req.cookies.token;
     if (!token) {

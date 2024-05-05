@@ -29,3 +29,7 @@ export interface CustomRequest<T> extends Request {
   user?: UserType;
   body: T;
 }
+
+export interface MessageType {
+  message: string;
+}

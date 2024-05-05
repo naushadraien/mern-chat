@@ -1,5 +1,5 @@
 import { TryCatch } from "../middlewares/error.js";
-import User from "../models/user.js";
+import User from "../models/User.js";
 import { errorMessage, successData } from "../utils/utility-func.js";
 import bcrypt from "bcryptjs";
 import { generateToken } from "../utils/generateToken.js";
