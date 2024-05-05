@@ -33,3 +33,19 @@ export const registerUser = TryCatch(
     return successData(res, "User registered successfully", newUser, true);
   }
 );
+
+export const loginUser = TryCatch(async (req, res, next) => {
+  const { email, password } = req.body;
+  const user = await User.findOne({ email }).select("+password");
+  if (!user) {
+    return errorMessage(next, "", 404);
+  }
+  const isCorrectPassword = await bcrypt.compare(password, user.password);
+  if (!isCorrectPassword) {
+    return errorMessage(next, "Invalid email or password", 400);
+  }
+
+  generateToken(res, user._id);
+
+  return successData(res, "Logged in successfully", user);
+});

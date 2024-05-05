@@ -19,6 +19,14 @@ const authSchema = {
         //   message: "Please provide image url",
         // }),
     }),
+    Login: z.object({
+        email: z.string({ message: "email is required" }).email({
+            message: "The email address you entered is not valid.",
+        }),
+        password: z.string({ message: "password is required" }).min(4, {
+            message: "Please enter a password that is at least 4 characters long.",
+        }),
+    }),
 };
 // export const userRegistrationSchema = z.object({
 //   fullName: z.string(),
