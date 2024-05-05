@@ -4,6 +4,7 @@ import { CustomRequest, MessageType, UserType } from "../types/types.js";
 import { errorMessage, successData } from "../utils/utility-func.js";
 import Conversation from "../models/Conversation.js";
 import Messages from "../models/Messages.js";
+import { getReceiverSocketId, io } from "../socket/socket.js";
 
 export const addMessages = TryCatch(
   async (req: CustomRequest<MessageType>, res, next) => {
@@ -41,6 +42,10 @@ export const addMessages = TryCatch(
     }
 
     await Promise.all([conversation.save(), newMessages.save()]);
+    const receiverSocketId = getReceiverSocketId(receiverId);
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("newMessages", newMessages);
+    }
 
     return successData(res, "messages created successfully", newMessages, true);
   }
@@ -60,7 +65,6 @@ export const getMessagesBetweenTwoUsers = TryCatch(
         $all: [senderId, receiverId],
       },
     }).populate("messages");
-    console.log(messages);
 
     if (!messages) {
       return errorMessage(next, "No messages found", 404);

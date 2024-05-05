@@ -2,6 +2,7 @@ import { TryCatch } from "../middlewares/error.js";
 import { errorMessage, successData } from "../utils/utility-func.js";
 import Conversation from "../models/Conversation.js";
 import Messages from "../models/Messages.js";
+import { getReceiverSocketId, io } from "../socket/socket.js";
 export const addMessages = TryCatch(async (req, res, next) => {
     const { message } = req.body;
     const { id: receiverId } = req.params;
@@ -30,6 +31,10 @@ export const addMessages = TryCatch(async (req, res, next) => {
         conversation.messages.push(newMessages._id);
     }
     await Promise.all([conversation.save(), newMessages.save()]);
+    const receiverSocketId = getReceiverSocketId(receiverId);
+    if (receiverSocketId) {
+        io.to(receiverSocketId).emit("newMessages", newMessages);
+    }
     return successData(res, "messages created successfully", newMessages, true);
 });
 export const getMessagesBetweenTwoUsers = TryCatch(async (req, res, next) => {
@@ -43,7 +48,6 @@ export const getMessagesBetweenTwoUsers = TryCatch(async (req, res, next) => {
             $all: [senderId, receiverId],
         },
     }).populate("messages");
-    console.log(messages);
     if (!messages) {
         return errorMessage(next, "No messages found", 404);
     }

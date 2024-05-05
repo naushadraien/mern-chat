@@ -5,6 +5,7 @@ import { Toaster } from "react-hot-toast";
 import "./globals.css";
 import QueryProvider from "@/Providers/queryProvider";
 import ReduxProvider from "../../redux/redux-provider/ReduxProvider";
+import { SocketProvider } from "@/Context/SocketProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,7 +25,9 @@ export default function RootLayout({
         <ReduxProvider>
           <Toaster position="top-center" />
           <RootProvider>
-            <QueryProvider>{children}</QueryProvider>
+            <SocketProvider>
+              <QueryProvider>{children}</QueryProvider>
+            </SocketProvider>
           </RootProvider>
         </ReduxProvider>
       </body>

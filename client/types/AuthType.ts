@@ -31,9 +31,18 @@ export type UserTypes = {
   createdAt: string;
   fullName: string;
   gender: string;
-  imageUrl: string;
+  imgUrl: string;
   password: string;
   updatedAt: string;
   email: string;
   _id: string;
-}[];
+};
+
+export type MessageType = {
+  _id: string;
+  message: string;
+  senderId: string;
+  receiverId: string;
+  createdAt: string;
+  updatedAt: string;
+};

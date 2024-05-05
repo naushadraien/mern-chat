@@ -8,7 +8,7 @@ export const userMessagesConfig = {
   }),
   sendMessage: (id: string, data: { message: string }): ConfigType => ({
     method: "post",
-    url: `/message/send/${id}`,
+    url: `/message/add/${id}`,
     data,
     withCredentials: true,
   }),

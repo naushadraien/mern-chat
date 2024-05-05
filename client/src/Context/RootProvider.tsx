@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 export type AuthType = {
   _id: string;
   // avatar?: string;
-  imageUrl: string;
+  imgUrl: string;
   name: string;
   // firstName: string;
   // lastName: string;
