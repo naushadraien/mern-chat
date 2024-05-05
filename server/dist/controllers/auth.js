@@ -29,7 +29,7 @@ export const loginUser = TryCatch(async (req, res, next) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email }).select("+password");
     if (!user) {
-        return errorMessage(next, "", 404);
+        return errorMessage(next, "Incorrect email or password", 400);
     }
     const isCorrectPassword = await bcrypt.compare(password, user.password);
     if (!isCorrectPassword) {
@@ -37,4 +37,15 @@ export const loginUser = TryCatch(async (req, res, next) => {
     }
     generateToken(res, user._id);
     return successData(res, "Logged in successfully", user);
+});
+export const getAllUsers = TryCatch(async (req, res, next) => {
+    const users = await User.find({
+        _id: {
+            $ne: req.user,
+        },
+    });
+    if (users.length === 0) {
+        return errorMessage(next, "No users found", 404);
+    }
+    return successData(res, "", users);
 });

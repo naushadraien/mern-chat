@@ -24,3 +24,8 @@ export interface UserSignUpType {
   imgUrl?: string;
   gender: "male" | "female";
 }
+
+export interface CustomRequest<T> extends Request {
+  user?: UserType;
+  body: T;
+}
