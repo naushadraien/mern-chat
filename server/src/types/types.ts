@@ -21,6 +21,6 @@ export interface UserSignUpType {
   email: string;
   password: string;
   confirmPassword: string;
-  imgUrl: string;
+  imgUrl?: string;
   gender: "male" | "female";
 }

@@ -15,9 +15,9 @@ const authSchema = {
         gender: z.enum(["male", "female"], {
             message: "please choose gender within male and female",
         }),
-        imgUrl: z.string({
-            message: "Please provide image url",
-        }),
+        // imgUrl: z.string({
+        //   message: "Please provide image url",
+        // }),
     }),
 };
 // export const userRegistrationSchema = z.object({
