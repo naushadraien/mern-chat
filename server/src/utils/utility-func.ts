@@ -40,7 +40,7 @@ export const errorMessage = (
   next: NextFunction,
   message: string,
   status: number,
-  details?: string
+  details?: string | string[] | undefined
 ) => {
   return next(
     new ErrorHandler(

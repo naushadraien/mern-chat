@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { ZodError, ZodType } from "zod";
-import ErrorHandler from "../utils/utility-class.js";
+import { errorMessage } from "../utils/utility-func.js";
 
 export function validateData<T>(schema: ZodType<T>) {
   return (req: Request, res: Response, next: NextFunction) => {
@@ -17,11 +17,12 @@ export function validateData<T>(schema: ZodType<T>) {
         // }));
 
         // Create a new ErrorHandler with the error messages
-        const err = new ErrorHandler("Invalid data", 400, errorMessages);
-        next(err);
+        // const err = new ErrorHandler("Invalid data", 400, errorMessages);
+        return errorMessage(next, "Invalid Data", 400, errorMessages);
+        // next(err);
       } else {
         // Pass other errors to the error handler
-        next(error);
+        return next(error);
       }
     }
   };
