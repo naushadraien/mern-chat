@@ -1,12 +1,5 @@
-import React, { FC, useEffect, useRef, useState } from "react";
-import { Input } from "../ui/input";
-import { SendHorizontal } from "lucide-react";
-import Image from "next/image";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { TryCatch } from "@/utils/TryCatch";
-import requestAPI from "@/utils/requestAPI";
-import { userMessagesConfig } from "@/apiHelpers/userMessages";
 import { useRoot } from "@/Context/RootProvider";
+import { userMessagesConfig } from "@/apiHelpers/userMessages";
 import {
   Form,
   FormControl,
@@ -14,14 +7,22 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
+import { TryCatch } from "@/utils/TryCatch";
+import requestAPI from "@/utils/requestAPI";
 import { MessageSchema } from "@/validationSchema";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { SendHorizontal } from "lucide-react";
+import Image from "next/image";
+import { FC, useEffect, useRef } from "react";
+import { Input } from "../ui/input";
 
+import { useSocket } from "@/Context/SocketProvider";
+import { zodResolver } from "@hookform/resolvers/zod";
 import moment from "moment";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useMessages } from "../../../hooks/useMessages";
 import { Button } from "../ui/button";
-import { useSocket } from "@/Context/SocketProvider";
 type MainChatProps = {
   fullName?: string;
   imgUrl?: string;
@@ -39,19 +40,8 @@ const MainChat: FC<MainChatProps> = ({ _id, fullName, imgUrl }) => {
   const queryClient = useQueryClient();
   const { socket } = useSocket();
   const { auth } = useRoot();
-  const [messages, setMessages] = useState<string[]>([]);
-  const { data } = useQuery({
-    queryKey: ["messages"],
-    queryFn: () =>
-      TryCatch(async () => {
-        const data = await requestAPI(
-          userMessagesConfig.userMessage(_id || "")
-        );
-        setMessages(data.data.messages);
-        return data.data;
-      }),
-  });
 
+  const { messages, setMessages } = useMessages(_id);
   const mutation = useMutation({
     mutationFn: (values: z.infer<typeof MessageSchema.MessageSchema>) =>
       TryCatch(async () => {
@@ -73,9 +63,6 @@ const MainChat: FC<MainChatProps> = ({ _id, fullName, imgUrl }) => {
 
   useEffect(() => {
     socket?.on("newMessages", (newMessage) => {
-      // newMessage.shouldShake = true;
-      // const sound = new Audio(notificationSound);
-      // sound.play();
       setMessages([...messages, newMessage]);
     });
 
@@ -85,12 +72,6 @@ const MainChat: FC<MainChatProps> = ({ _id, fullName, imgUrl }) => {
       }
       socket?.off("newMessage");
     };
-
-    // return () => {
-    //   if (socket) {
-    //     void socket.off("newMessage"); // Ignore the return value
-    //   }
-    // };
   }, [socket, setMessages, messages]);
 
   const lastMessageRef = useRef<HTMLDivElement>(null);

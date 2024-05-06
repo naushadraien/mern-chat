@@ -1,13 +1,11 @@
 import { userMessagesConfig } from "@/apiHelpers/userMessages";
 import requestAPI from "@/utils/requestAPI";
-import { useQuery } from "@tanstack/react-query";
-import { useDispatch } from "react-redux";
-import { addMessages } from "../redux/slices/messageSlice";
-import { useEffect } from "react";
 import { TryCatch } from "@/utils/TryCatch";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 
 export const useMessages = (selectedUserId: string | undefined) => {
-  const dispatch = useDispatch();
+  const [messages, setMessages] = useState<string[]>([]);
   const { data } = useQuery({
     queryKey: ["messages"],
     queryFn: () =>
@@ -15,16 +13,10 @@ export const useMessages = (selectedUserId: string | undefined) => {
         const data = await requestAPI(
           userMessagesConfig.userMessage(selectedUserId || "")
         );
+        setMessages(data.data.messages);
         return data.data;
       }),
   });
-  console.log("data", data);
 
-  useEffect(() => {
-    if (data) {
-      dispatch(addMessages(data.messages));
-    }
-  }, [data, dispatch]);
-
-  return { data };
+  return { data, messages, setMessages };
 };
