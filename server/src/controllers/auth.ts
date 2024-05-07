@@ -52,9 +52,8 @@ export const loginUser = TryCatch(async (req, res, next) => {
 
 export const getAllUsers = TryCatch(
   async (req: CustomRequest<UserType>, res, next) => {
-    const { s } = req.query;
-    console.log(s);
-    const searchRegex = new RegExp(s as string, "i"); // i for case insensitive search query in MongoDB i.e it will match both "john" and "John"
+    const { search } = req.query;
+    const searchRegex = new RegExp(search as string, "i"); // i for case insensitive search query in MongoDB i.e it will match both "john" and "John"
     const users = await User.find({
       _id: {
         $ne: req.user,

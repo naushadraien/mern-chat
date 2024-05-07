@@ -4,7 +4,7 @@ import { TryCatch } from "@/utils/TryCatch";
 import requestAPI from "@/utils/requestAPI";
 import { useQuery } from "@tanstack/react-query";
 import { LogOut, Search } from "lucide-react";
-import { useState } from "react";
+import { ChangeEvent, Dispatch, FC, SetStateAction, useState } from "react";
 import { UserTypes } from "../../types/AuthType";
 // import MainChat from "./MainChat/MainChat";
 // import NoChat from "./NoChat";
@@ -17,8 +17,11 @@ import { RootState } from "../../redux/store/store";
 import { addSelectedUserId } from "../../redux/slices/userSlice";
 import NoChat from "./Nochat";
 import MainChat from "./MainChat/MainChat";
-
-const Chat = () => {
+interface ChatPropsType {
+  search: string;
+  searchChange: (e: ChangeEvent<HTMLInputElement>) => void;
+}
+const Chat: FC<ChatPropsType> = ({ search, searchChange }) => {
   const dispatch = useDispatch();
   const selectedUserId = useSelector(
     (state: RootState) => state.users.selectedUserId
@@ -35,7 +38,12 @@ const Chat = () => {
     <div className="flex gap-10">
       <div className="flex-[20%] flex flex-col gap-4">
         <div className="flex justify-center flex-col gap-10 items-center relative">
-          <Input placeholder="Search User..." className="pl-8" />
+          <Input
+            placeholder="Search User..."
+            className="pl-8"
+            value={search}
+            onChange={searchChange}
+          />
           <Search className="absolute top-2 left-2 text-gray-500" />
           <Separator />
         </div>
